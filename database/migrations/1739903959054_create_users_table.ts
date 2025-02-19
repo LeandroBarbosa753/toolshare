@@ -10,7 +10,12 @@ export default class extends BaseSchema {
       table.string('name').nullable()
       table.string('email').notNullable().unique()
       table.string('password').notNullable()
-      table.string('address').notNullable()
+
+      table.string('phone').notNullable().unique()
+      table.string('longitude').nullable().unique()
+      table.string('latitude').nullable().unique()
+      table.string('address').nullable()
+
       table.enum('type', ['locador', 'locatário']).defaultTo('locatário')
       table.string('token').nullable()
 

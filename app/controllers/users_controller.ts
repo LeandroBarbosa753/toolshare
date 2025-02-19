@@ -9,9 +9,18 @@ export default class UsersController {
   }
 
   async store({ request }: HttpContext) {
-    const { name, email, password, cpf, type, address } =
+    const { name, email, password, cpf, type, address, longitude, latitude } =
       await request.validateUsing(createUserValidator)
-    const user = await User.create({ name, cpf, email, password, type, address })
+    const user = await User.create({
+      name,
+      email,
+      password,
+      cpf,
+      type,
+      address,
+      longitude,
+      latitude,
+    })
     return user
   }
 
@@ -27,8 +36,9 @@ export default class UsersController {
 
   async update({ params, request }: HttpContext) {
     const user = await User.findBy('id', params.id)
-    const { name, password, address } = await request.validateUsing(updateUserValidator)
-    user!.merge({ name, password, address })
+    const { name, password, address, latitude, longitude } =
+      await request.validateUsing(updateUserValidator)
+    user!.merge({ name, password, address, latitude, longitude })
     await user!.save()
     return user
   }

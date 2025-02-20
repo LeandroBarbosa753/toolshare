@@ -29,6 +29,9 @@ export default class Tool extends BaseModel {
   @column()
   declare userId: number
 
+  @column()
+  declare image: string | null
+
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 

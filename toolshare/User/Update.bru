@@ -1,0 +1,23 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:3333/user/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {  
+    "name":"Liandro",
+    "password":"1234567",
+    "address":"R. Álvaro Mendes, 94 - Centro (Sul), Teresina - PI, 64000-040",
+    "phone":"+5586930405060",
+    "latitude":"-5.088646123812153",
+    "longitude":"-42.81119745095279" 
+  }
+  
+}

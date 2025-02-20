@@ -8,6 +8,7 @@ export const createToolValidator = vine.compile(
     category: vine.string().trim().minLength(3),
     rating: vine.number().min(0).max(5),
     status: vine.enum(['disponível', 'alugada', 'em manutenção']),
+    image: vine.string().optional(),
   })
 )
 
@@ -19,5 +20,6 @@ export const updateToolValidator = vine.compile(
     category: vine.string().trim().minLength(3).optional(),
     rating: vine.number().min(0).max(5).optional(),
     status: vine.enum(['disponível', 'alugada', 'em manutenção']).optional(),
+    image: vine.string().optional(),
   })
 )

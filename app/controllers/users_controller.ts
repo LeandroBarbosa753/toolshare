@@ -8,20 +8,23 @@ export default class UsersController {
     return users
   }
 
-  async store({ request }: HttpContext) {
-    const { name, email, password, cpf, type, address, longitude, latitude } =
+  async store({ request, response }: HttpContext) {
+    const { name, email, password, phone, cpf, type, address, latitude, longitude, image } =
       await request.validateUsing(createUserValidator)
     const user = await User.create({
       name,
       email,
       password,
+      phone,
       cpf,
       type,
       address,
-      longitude,
       latitude,
+      longitude,
+      image,
     })
-    return user
+    response.status(201).json({ message: 'User created', user })
+    return
   }
 
   async show({ params, response }: HttpContext) {
@@ -34,20 +37,20 @@ export default class UsersController {
     }
   }
 
-  async update({ params, request }: HttpContext) {
+  async update({ params, request, response }: HttpContext) {
     const user = await User.findBy('id', params.id)
-    const { name, password, address, latitude, longitude } =
+    const { name, password, address, phone, latitude, longitude, image } =
       await request.validateUsing(updateUserValidator)
-    user!.merge({ name, password, address, latitude, longitude })
+    user!.merge({ name, password, address, phone, latitude, longitude, image })
     await user!.save()
-    return user
+    response.status(200).json({ message: 'User updated successfully', user })
   }
 
   async destroy({ params, response }: HttpContext) {
     try {
       const user = await User.findByOrFail('id', params.id)
       await user.delete()
-      return response.status(203).json({ message: 'User deleted' })
+      return response.status(203).json({ message: 'User deleted', user })
     } catch (error) {
       return response.status(404).json({ message: 'User not found' })
     }

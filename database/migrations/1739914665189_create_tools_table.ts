@@ -20,6 +20,7 @@ export default class extends BaseSchema {
       table.string('category').notNullable()
       table.float('rating').nullable()
       table.enum('status', ['disponível', 'alugada', 'em manutenção']).defaultTo('disponível')
+      table.string('image').nullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

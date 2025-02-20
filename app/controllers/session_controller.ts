@@ -3,16 +3,16 @@ import { createSessionValidator } from '#validators/session'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class SessionController {
-  async store({ request }: HttpContext) {
+  async store({ request, response }: HttpContext) {
     const { email, password } = await request.validateUsing(createSessionValidator)
     const user = await User.verifyCredentials(email, password)
     const token = await User.accessTokens.create(user)
     user.$setAttribute('token', token)
-    user.save
-    const response = {
+    user.save()
+    const response_user = {
       user,
     }
-    return response
+    response.status(201).json({ message: 'User logged in', response_user })
   }
 
   async destroy({ auth, response }: HttpContext) {

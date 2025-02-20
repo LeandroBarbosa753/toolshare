@@ -35,6 +35,7 @@ export const createUserValidator = vine.compile(
     type: vine.enum(['locador', 'locatário']),
     latitude: vine.string().optional(),
     longitude: vine.string().optional(),
+    image: vine.string().optional(),
   })
 )
 
@@ -43,7 +44,18 @@ export const updateUserValidator = vine.compile(
     name: vine.string().trim().minLength(4).maxLength(256).optional(),
     password: vine.string().minLength(6).optional(),
     address: vine.string().trim().minLength(4).maxLength(256).optional(),
+    phone: vine
+      .string()
+      .trim()
+      .minLength(10)
+      .maxLength(15)
+      .unique(async (db, value) => {
+        const match = await db.from('users').select('id').where('phone', value).first()
+        return !match
+      })
+      .optional(),
     latitude: vine.string().optional(),
     longitude: vine.string().optional(),
+    image: vine.string().optional(),
   })
 )

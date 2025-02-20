@@ -33,16 +33,19 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare phone: string
 
   @column()
-  declare longitude: string
+  declare latitude: string
 
   @column()
-  declare latitude: string
+  declare longitude: string
 
   @column()
   declare address: string
 
   @column()
   declare type: 'locador' | 'locatário'
+
+  @column()
+  declare image: string | null
 
   @column()
   declare token: string | null

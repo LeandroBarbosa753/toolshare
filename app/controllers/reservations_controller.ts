@@ -20,22 +20,27 @@ export default class ReservationsController {
       return response.unauthorized({ message: 'Você precisa estar autenticado' })
     }
     try {
-      const { tool_id, date_initial, date_end, status } = await request.validateUsing(createReservationValidator)
-      if (date_end.getTime() <= date_initial.getTime()) {
+      const { tool_id, start_date, end_date, status } =
+        await request.validateUsing(createReservationValidator)
+
+      if (end_date.getTime() <= start_date.getTime()) {
         return response.status(400).json({ message: 'A data final deve ser maior que a data inicial' })
       }
+
       const tool = await Tool.findOrFail(tool_id)
-      const diffMs = date_end.getTime() - date_initial.getTime()
+      const diffMs = end_date.getTime() - start_date.getTime()
       const hours = diffMs / (1000 * 60 * 60)
-      const calculatedPrice = hours * tool.price
+      const computedPrice = hours * tool.price
+
       const user = auth.user
       const reservation = await user.related('reservations').create({
         toolId: tool_id,
-        dateInitial: date_initial,
-        dateEnd: date_end,
-        totalPrice: calculatedPrice,
+        start_date,
+        end_date,
+        total_price: computedPrice,
         status,
       })
+
       return reservation
     } catch (error) {
       return response.status(400).json({ message: error.message })
@@ -54,6 +59,7 @@ export default class ReservationsController {
         .where('id', params.id)
         .preload('tool')
         .firstOrFail()
+
       return reservation
     } catch (error) {
       return response.status(404).json({ message: 'Reserva não encontrada' })
@@ -66,24 +72,38 @@ export default class ReservationsController {
     }
     try {
       const user = auth.user
-      const reservation = await user.related('reservations').query().where('id', params.id).firstOrFail()
-      const { date_initial, date_end, status } = await request.validateUsing(updateReservationValidator)
+      const reservation = await user
+        .related('reservations')
+        .query()
+        .where('id', params.id)
+        .firstOrFail()
+
+      const { tool_id, start_date, end_date, status } =
+        await request.validateUsing(updateReservationValidator)
+
       reservation.merge({
-        ...(date_initial !== undefined && { dateInitial: date_initial }),
-        ...(date_end !== undefined && { dateEnd: date_end }),
+        ...(tool_id !== undefined && { toolId: tool_id }),
+        ...(start_date !== undefined && { start_date }),
+        ...(end_date !== undefined && { end_date }),
         ...(status !== undefined && { status }),
       })
-      if (date_initial || date_end) {
-        const newDateInitial = date_initial || reservation.dateInitial
-        const newDateEnd = date_end || reservation.dateEnd
-        if (newDateEnd.getTime() <= newDateInitial.getTime()) {
+
+      if (start_date || end_date || tool_id) {
+        const finalStart = start_date || reservation.start_date
+        const finalEnd = end_date || reservation.end_date
+
+        if (finalEnd.getTime() <= finalStart.getTime()) {
           return response.status(400).json({ message: 'A data final deve ser maior que a data inicial' })
         }
-        const tool = await Tool.findOrFail(reservation.toolId)
-        const diffMs = newDateEnd.getTime() - newDateInitial.getTime()
+
+        const toolIdToUse = tool_id || reservation.toolId
+        const tool = await Tool.findOrFail(toolIdToUse)
+
+        const diffMs = finalEnd.getTime() - finalStart.getTime()
         const hours = diffMs / (1000 * 60 * 60)
-        reservation.totalPrice = hours * tool.price
+        reservation.total_price = hours * tool.price
       }
+
       await reservation.save()
       return reservation
     } catch (error) {
@@ -97,7 +117,12 @@ export default class ReservationsController {
     }
     try {
       const user = auth.user
-      const reservation = await user.related('reservations').query().where('id', params.id).firstOrFail()
+      const reservation = await user
+        .related('reservations')
+        .query()
+        .where('id', params.id)
+        .firstOrFail()
+
       await reservation.delete()
       return response.status(203).json({ message: 'Reserva deletada' })
     } catch (error) {

@@ -8,11 +8,11 @@ import { middleware } from './kernel.js'
 router.resource('user', UsersController).apiOnly()
 
 router.post('session', [SessionController, 'store'])
-router.delete('session', [SessionController, 'destroy'])
 
 router
   .group(() => {
     router.resource('tool', ToolsController).apiOnly()
     router.resource('reservation', ReservationsController).apiOnly()
+    router.delete('session', [SessionController, 'destroy'])
   })
   .use(middleware.auth())

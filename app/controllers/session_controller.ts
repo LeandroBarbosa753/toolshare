@@ -4,20 +4,33 @@ import type { HttpContext } from '@adonisjs/core/http'
 
 export default class SessionController {
   async store({ request, response }: HttpContext) {
-    const { email, password } = await request.validateUsing(createSessionValidator)
-    const user = await User.verifyCredentials(email, password)
-    const token = await User.accessTokens.create(user)
-    user.$setAttribute('token', token)
-    user.save()
-    const response_user = {
-      user,
+    try {
+      const { email, password } = await request.validateUsing(createSessionValidator)
+      const user = await User.verifyCredentials(email, password)
+      const token = await User.accessTokens.create(user)
+      const tokenEspecifico = token.toJSON().token
+      user.$setAttribute('token', tokenEspecifico)
+      user.save()
+      return response.ok({ token })
+    } catch (error) {
+      return response.unauthorized({ message: 'Invalid email or password' })
     }
-    response.status(201).json({ message: 'User logged in', response_user })
   }
 
   async destroy({ auth, response }: HttpContext) {
-    const user = auth.user!
-    await User.accessTokens.delete(user, user.currentAccessToken.identifier)
-    return response.status(203)
+    try {
+      const user = auth.user
+      if (!user || !user.currentAccessToken?.identifier) {
+        return response.badRequest({ message: 'Invalid session' })
+      }
+
+      await User.accessTokens.delete(user, user.currentAccessToken.identifier)
+      user.token = null
+      user.save()
+      console.log('Usuário removido')
+      return response.status(203)
+    } catch (error) {
+      return response.internalServerError({ message: 'Failed to log out' })
+    }
   }
 }

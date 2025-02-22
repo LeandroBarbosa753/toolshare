@@ -11,7 +11,8 @@ export default class SessionController {
       const tokenEspecifico = token.toJSON().token
       user.$setAttribute('token', tokenEspecifico)
       user.save()
-      return response.ok({ token })
+      console.log(user.$attributes)
+      return response.ok(user.$attributes)
     } catch (error) {
       return response.unauthorized({ message: 'Invalid email or password' })
     }

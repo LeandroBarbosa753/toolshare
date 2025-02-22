@@ -53,9 +53,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @hasMany(() => Tool)
   declare tools: HasMany<typeof Tool>
 
-  @hasMany(() => Reservation, {
-    foreignKey: 'userId',
-  })
+  @hasMany(() => Reservation)
   declare reservations: HasMany<typeof Reservation>
 
   @column.dateTime({ autoCreate: true })

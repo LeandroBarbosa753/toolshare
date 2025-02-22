@@ -7,11 +7,18 @@ meta {
 post {
   url: http://localhost:3333/reservation
   body: json
-  auth: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: oat_MQ.bGpoR1RIN2xsdm1zWFBvR2tyUkd2TDBkRDN3OFMyems3TWRpNVRucjE0NDU0NjM3NTQ
 }
 
 body:json {
   {
-    
+    "tool_id": 1,
+    "start_date": "2023-10-01T10:00:00Z",
+    "end_date": "2023-10-01T14:00:00Z",
+    "status": "pendente"
   }
 }

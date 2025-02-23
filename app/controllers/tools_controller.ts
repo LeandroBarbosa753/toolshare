@@ -5,10 +5,10 @@ import Tool from '#models/tool'
 export default class ToolsController {
   async index({ response }: HttpContext) {
     try {
-      const availableTools = await Tool.query().where('status', 'disponível')
+      const availableTools = await Tool.query()
 
       return response.status(200).json({
-        message: 'Available tools retrieved successfully',
+        message: 'All tools retrieved successfully',
         tools: availableTools,
       })
     } catch (error) {

@@ -9,11 +9,11 @@ export default class Reservation extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-  @column()
-  declare start_date: Date
+  @column.dateTime()
+  declare start_date: DateTime
 
-  @column()
-  declare end_date: Date
+  @column.dateTime()
+  declare end_date: DateTime
 
   @column()
   declare total_price: number

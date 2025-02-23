@@ -1,13 +1,13 @@
-import vine from '@vinejs/vine'
+import vine from '@vinejs/vine';
+import { DateTime } from 'luxon';
 
-// Função para validar datas em formatos personalizados
 const customDate = vine.string().transform((value) => {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) {
-    throw new Error('Formato de data inválido')
+  const date = DateTime.fromISO(value); 
+  if (!date.isValid) {
+    throw new Error('Formato de data inválido');
   }
-  return date
-})
+  return date;
+});
 
 export const createReservationValidator = vine.compile(
   vine.object({
@@ -17,14 +17,14 @@ export const createReservationValidator = vine.compile(
     total_price: vine.number().min(0).optional(),
     status: vine.enum(['pendente', 'confirmada', 'cancelada', 'finalizada']),
   })
-)
+);
 
 export const updateReservationValidator = vine.compile(
   vine.object({
     tool_id: vine.number().optional(),
-    start_date: vine.date().optional(),
-    end_date: vine.date().optional(),
+    start_date: customDate.optional(),
+    end_date: customDate.optional(),
     total_price: vine.number().min(0).optional(),
     status: vine.enum(['pendente', 'confirmada', 'cancelada']).optional(),
   })
-)
+);

@@ -14,6 +14,29 @@ export default class ReservationsController {
     return response.json(reservations)
   }
 
+  public async received({ auth, response }: HttpContext) {
+    const user = auth.user;
+    if (!user) {
+      return response.unauthorized({ message: 'Você precisa estar autenticado' });
+    }
+  
+    try {
+      
+      const receivedReservations = await Reservation.query()
+        .whereHas('tool', (query) => {
+          query.where('user_id', user.id);
+        })
+        .whereNot('user_id', user.id) 
+        .preload('tool')
+        .preload('user'); 
+  
+      return response.json(receivedReservations);
+    } catch (error) {
+      console.error('Erro ao buscar reservas recebidas:', error);
+      return response.internalServerError({ message: 'Erro ao buscar reservas recebidas' });
+    }
+  }
+
   public async store({ auth, request, response }: HttpContext) {
     const user = auth.user
     if (!user) {

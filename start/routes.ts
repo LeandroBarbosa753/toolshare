@@ -21,9 +21,10 @@ router
     // Rotas para ferramentas e reservas
     router.resource('tool', ToolsController).apiOnly()
     router.resource('reservation', ReservationsController).apiOnly()
-
+    router.get('/reservations/received', [ReservationsController, 'received'])
     // Rotas para o chat
     router.post('/chats', [ChatController, 'store'])
     router.get('/tools/:id/chats', [ChatController, 'show'])
+
   })
   .use(middleware.auth()) // Aplica o middleware de autenticação a todas as rotas do grupo

@@ -37,6 +37,34 @@ export default class ReservationsController {
     }
   }
 
+  public async updateStatus({ auth, params, request, response }: HttpContext) {
+    const user = auth.user;
+    if (!user) {
+      return response.unauthorized({ message: 'Você precisa estar autenticado' });
+    }
+  
+    try {
+      const reservation = await Reservation.query()
+        .where('id', params.id)
+        .preload('tool')
+        .firstOrFail();
+  
+      if (reservation.tool.userId !== user.id) {
+        return response.unauthorized({ message: 'Você não tem permissão para atualizar o status desta reserva' });
+      }
+
+      const { status } = await request.validateUsing(updateReservationValidator);
+  
+      reservation.status = status;
+      await reservation.save();
+  
+      return response.json(reservation);
+    } catch (error) {
+      console.error('Erro ao atualizar o status da reserva:', error);
+      return response.status(404).json({ message: 'Reserva não encontrada' });
+    }
+  }
+
   public async store({ auth, request, response }: HttpContext) {
     const user = auth.user
     if (!user) {

@@ -14,7 +14,6 @@ router.resource('user', UsersController).apiOnly()
 
 // Rotas de sessão (login/logout)
 router.post('session', [SessionController, 'store'])
-router.delete('session', [SessionController, 'destroy'])
 
 // Rotas protegidas (requerem autenticação)
 router

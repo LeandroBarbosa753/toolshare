@@ -11,20 +11,24 @@ export default class UsersController {
   async store({ request, response }: HttpContext) {
     const { name, email, password, phone, cpf, type, address, latitude, longitude, image } =
       await request.validateUsing(createUserValidator)
-    const user = await User.create({
-      name,
-      email,
-      password,
-      phone,
-      cpf,
-      type,
-      address,
-      latitude,
-      longitude,
-      image,
-    })
-    response.status(201).json({ message: 'User created', user })
-    return
+    try {
+      const user = await User.create({
+        name,
+        email,
+        password,
+        phone,
+        cpf,
+        type,
+        address,
+        latitude,
+        longitude,
+        image,
+      })
+      response.status(201).json({ message: 'User created', user })
+      return
+    } catch (error) {
+      console.error({ error: error })
+    }
   }
 
   async show({ params, response }: HttpContext) {

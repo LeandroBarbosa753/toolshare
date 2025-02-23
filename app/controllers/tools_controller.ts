@@ -1,11 +1,21 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { createToolValidator, updateToolValidator } from '#validators/tool'
 import Tool from '#models/tool'
+
 export default class ToolsController {
-  async index({ auth }: HttpContext) {
-    const user = auth.user!
-    await user.preload('tools')
-    return user.tools
+  async index({ response }: HttpContext) {
+    try {
+      const availableTools = await Tool.query()
+
+      return response.status(200).json({
+        message: 'All tools retrieved successfully',
+        tools: availableTools,
+      })
+    } catch (error) {
+      return response
+        .status(500)
+        .json({ message: 'Failed to retrieve tools', error: error.message })
+    }
   }
 
   async store({ request, response, auth }: HttpContext) {

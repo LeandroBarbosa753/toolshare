@@ -3,6 +3,7 @@ import { BaseModel, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import { type HasMany, type BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from './user.js'
 import Reservation from './reservation.js'
+import Chat from './chat.js'
 
 export default class Tool extends BaseModel {
   @column({ isPrimary: true })
@@ -37,6 +38,9 @@ export default class Tool extends BaseModel {
 
   @hasMany(() => Reservation)
   declare reservations: HasMany<typeof Reservation>
+
+  @hasMany(() => Chat)
+  declare chats: HasMany<typeof Chat>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

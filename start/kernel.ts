@@ -7,7 +7,16 @@
 | or the router.
 |
 */
+import Application from '@ioc:Adonis/Core/Application'
 
+export default class AppProvider {
+  constructor(protected app: Application) {}
+
+  public async ready() {
+    // Inicializa o Socket.IO quando o aplicativo estiver pronto
+    await import('./socket')
+  }
+}
 import router from '@adonisjs/core/services/router'
 import server from '@adonisjs/core/services/server'
 

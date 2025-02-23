@@ -1,0 +1,154 @@
+# Criar um novo usuário
+POST http://localhost:3333/user
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Fran Silva",
+  "email": "fran@gmail.com",
+  "password": "123456",
+  "phone": "11999999999",
+  "cpf": "12345678900",
+  "type": "locador",
+  "address": "Rua Exemplo, 123",
+  "latitude": "-23.5505",
+  "longitude": "-46.6333",
+  "image": "url_da_imagem"
+}
+
+# Criar uma sessão (Login)
+POST http://localhost:3333/session
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "fran@gmail.com",
+  "password": "123456"
+}
+
+# Listar todos os usuários
+GET http://localhost:3333/user
+Accept: application/json
+
+# Buscar um usuário específico
+GET http://localhost:3333/user/1
+Accept: application/json
+
+# Atualizar um usuário
+PUT http://localhost:3333/user/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "João Silva Atualizado",
+  "password": "123456",
+  "address": "Nova Rua, 456",
+  "phone": "11888888888",
+  "latitude": "-23.5515",
+  "longitude": "-46.6343",
+  "image": "nova_url_da_imagem"
+}
+
+# Excluir um usuário
+DELETE http://localhost:3333/user/1
+Accept: application/json
+
+# Criar uma nova ferramenta
+POST http://localhost:3333/tool
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+  "name": "Furadeira",
+  "description": "Furadeira de alta potência",
+  "price": 50,
+  "category": "Ferramentas",
+  "rating": 4.5,
+  "status": "disponível",
+  "image": "url_da_imagem",
+  "userId": 2
+}
+
+# Listar todas as ferramentas
+GET http://localhost:3333/tool
+Accept: application/json
+Authorization: Bearer <token>
+
+# Buscar uma ferramenta específica
+GET http://localhost:3333/tool/2
+Accept: application/json
+Authorization: Bearer <token>
+
+# Atualizar uma ferramenta
+PUT http://localhost:3333/tool/1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer <token>
+
+{
+  "name": "Furadeira Atualizada",
+  "description": "Furadeira de alta potência com bateria",
+  "price": 60.0,
+  "category": "Ferramentas Elétricas",
+  "status": "disponível",
+  "image": "nova_url_da_imagem"
+}
+
+# Excluir uma ferramenta
+DELETE http://localhost:3333/tool/1
+Accept: application/json
+Authorization: Bearer <token>
+
+# Criar uma nova reserva
+POST http://localhost:3333/reservation
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer <token>
+
+{
+  "start_date": "2023-10-10",
+  "end_date": "2023-10-15",
+  "tool_id": 2,
+  "status": "pendente"
+}
+
+# Listar todas as reservas
+GET http://localhost:3333/reservation
+Accept: application/json
+Authorization: Bearer <token>
+
+# Buscar uma reserva específica
+GET http://localhost:3333/reservation/1
+Accept: application/json
+Authorization: Bearer <token>
+
+# Atualizar o status de uma reserva
+PUT http://localhost:3333/reservation/1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer <token>
+
+{
+  "status": "confirmada"
+}
+
+# Excluir uma reserva
+DELETE http://localhost:3333/reservation/1
+Accept: application/json
+Authorization: Bearer <token>
+
+# Criar um chat
+POST http://localhost:3333/chats
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer <token>
+
+{
+  "message": "Olá, estou interessado na sua ferramenta!",
+  "toolId": 1
+}
+
+# Listar chats de uma ferramenta específica
+GET http://localhost:3333/tools/1/chats
+Accept: application/json
+Authorization: Bearer <token>

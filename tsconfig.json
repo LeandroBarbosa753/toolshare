@@ -2,6 +2,10 @@
   "extends": "@adonisjs/tsconfig/tsconfig.app.json",
   "compilerOptions": {
     "rootDir": "./",
-    "outDir": "./build"
+    "outDir": "./build",
+    "paths": {
+      "#controllers/*": ["app/Controllers/*"],
+      "@ioc:/*": ["node_modules/@adonisjs/*/src"]  // Adiciona este caminho
+    }
   }
 }

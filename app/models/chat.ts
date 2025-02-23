@@ -5,33 +5,24 @@ import { type BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from './user.js'
 import Tool from './tool.js'
 
-export default class Reservation extends BaseModel {
+export default class Chat extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
   @column()
-  declare start_date: Date
-
-  @column()
-  declare end_date: Date
-
-  @column()
-  declare total_price: number
-
-  @column()
-  declare status: 'pendente' | 'confirmada' | 'cancelada'
+  declare message: string 
 
   @column()
   declare userId: number
 
   @column()
-  declare toolId: number
+  declare toolId: number 
 
   @belongsTo(() => User)
-  declare user: BelongsTo<typeof User>
+  declare user: BelongsTo<typeof User> 
 
   @belongsTo(() => Tool)
-  declare tool: BelongsTo<typeof Tool>
+  declare tool: BelongsTo<typeof Tool> 
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

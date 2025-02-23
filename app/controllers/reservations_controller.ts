@@ -5,53 +5,77 @@ import { createReservationValidator, updateReservationValidator } from '#validat
 
 export default class ReservationsController {
   public async index({ auth, response }: HttpContext) {
-    if (!auth.user) {
+    const user = auth.user
+    if (!user) {
       return response.unauthorized({ message: 'Você precisa estar autenticado' })
     }
-    const user = auth.user
-    await user.preload('reservations', (query) => {
-      query.preload('tool')
-    })
-    return user.reservations
+
+    const reservations = await Reservation.query().where('user_id', user.id).preload('tool')
+    return response.json(reservations)
   }
 
   public async store({ auth, request, response }: HttpContext) {
-    if (!auth.user) {
+    const user = auth.user
+    if (!user) {
       return response.unauthorized({ message: 'Você precisa estar autenticado' })
     }
+
     try {
-      const { tool_id, date_initial, date_end, status } = await request.validateUsing(createReservationValidator)
-      if (date_end.getTime() <= date_initial.getTime()) {
-        return response.status(400).json({ message: 'A data final deve ser maior que a data inicial' })
+      const rawData = request.all()
+      console.log('Dados recebidos:', rawData)
+
+      const { tool_id, start_date, end_date, status } = await request.validateUsing(
+        createReservationValidator
+      )
+
+      if (end_date <= start_date) {
+        return response.badRequest({ message: 'A data final deve ser maior que a data inicial' })
       }
+
       const tool = await Tool.findOrFail(tool_id)
-      const diffMs = date_end.getTime() - date_initial.getTime()
-      const hours = diffMs / (1000 * 60 * 60)
-      const calculatedPrice = hours * tool.price
-      const user = auth.user
-      const reservation = await user.related('reservations').create({
+      if (!tool.price) {
+        return response.badRequest({ message: 'Preço da ferramenta não encontrado' })
+      }
+
+      const hours = (end_date.getTime() - start_date.getTime()) / (1000 * 60 * 60)
+      const computedPrice = hours * tool.price
+
+      const reservation = await Reservation.create({
+        userId: user.id,
         toolId: tool_id,
-        dateInitial: date_initial,
-        dateEnd: date_end,
-        totalPrice: calculatedPrice,
-        status,
+        start_date: start_date,
+        end_date: end_date,
+        total_price: computedPrice,
+        status: status || 'pendente',
       })
-      return reservation
+
+      return response.created(reservation)
     } catch (error) {
-      return response.status(400).json({ message: error.message })
+      console.error('Erro ao criar reserva:', error)
+
+      if (error.messages) {
+        return response.badRequest({
+          message: 'Erro de validação',
+          errors: error.messages,
+        })
+      }
+
+      return response.internalServerError({
+        message: 'Erro ao criar reserva',
+      })
     }
   }
 
   public async show({ auth, params, response }: HttpContext) {
-    if (!auth.user) {
+    const user = auth.user
+    if (!user) {
       return response.unauthorized({ message: 'Você precisa estar autenticado' })
     }
+
     try {
-      const user = auth.user
-      const reservation = await user
-        .related('reservations')
-        .query()
+      const reservation = await Reservation.query()
         .where('id', params.id)
+        .where('user_id', user.id)
         .preload('tool')
         .firstOrFail()
       return reservation
@@ -61,28 +85,44 @@ export default class ReservationsController {
   }
 
   public async update({ auth, params, request, response }: HttpContext) {
-    if (!auth.user) {
+    const user = auth.user
+    if (!user) {
       return response.unauthorized({ message: 'Você precisa estar autenticado' })
     }
+
     try {
-      const user = auth.user
-      const reservation = await user.related('reservations').query().where('id', params.id).firstOrFail()
-      const { date_initial, date_end, status } = await request.validateUsing(updateReservationValidator)
-      reservation.merge({
-        ...(date_initial !== undefined && { dateInitial: date_initial }),
-        ...(date_end !== undefined && { dateEnd: date_end }),
-        ...(status !== undefined && { status }),
-      })
-      if (date_initial || date_end) {
-        const newDateInitial = date_initial || reservation.dateInitial
-        const newDateEnd = date_end || reservation.dateEnd
-        if (newDateEnd.getTime() <= newDateInitial.getTime()) {
-          return response.status(400).json({ message: 'A data final deve ser maior que a data inicial' })
+      const reservation = await Reservation.query()
+        .where('id', params.id)
+        .where('user_id', user.id)
+        .firstOrFail()
+      const { tool_id, start_date, end_date, status } = await request.validateUsing(
+        updateReservationValidator
+      )
+      if (tool_id !== undefined) {
+        reservation.toolId = tool_id
+      }
+      if (start_date !== undefined) {
+        reservation.start_date = start_date
+      }
+      if (end_date !== undefined) {
+        reservation.end_date = end_date
+      }
+      if (status !== undefined) {
+        reservation.status = status
+      }
+      if (start_date || end_date || tool_id) {
+        const finalStart = start_date || reservation.start_date
+        const finalEnd = end_date || reservation.end_date
+        if (finalEnd.getTime() <= finalStart.getTime()) {
+          return response
+            .status(400)
+            .json({ message: 'A data final deve ser maior que a data inicial' })
         }
-        const tool = await Tool.findOrFail(reservation.toolId)
-        const diffMs = newDateEnd.getTime() - newDateInitial.getTime()
+        const toolIdToUse = tool_id || reservation.toolId
+        const tool = await Tool.findOrFail(toolIdToUse)
+        const diffMs = finalEnd.getTime() - finalStart.getTime()
         const hours = diffMs / (1000 * 60 * 60)
-        reservation.totalPrice = hours * tool.price
+        reservation.total_price = hours * tool.price
       }
       await reservation.save()
       return reservation
@@ -92,12 +132,16 @@ export default class ReservationsController {
   }
 
   public async destroy({ auth, params, response }: HttpContext) {
-    if (!auth.user) {
+    const user = auth.user
+    if (!user) {
       return response.unauthorized({ message: 'Você precisa estar autenticado' })
     }
+
     try {
-      const user = auth.user
-      const reservation = await user.related('reservations').query().where('id', params.id).firstOrFail()
+      const reservation = await Reservation.query()
+        .where('id', params.id)
+        .where('user_id', user.id)
+        .firstOrFail()
       await reservation.delete()
       return response.status(203).json({ message: 'Reserva deletada' })
     } catch (error) {

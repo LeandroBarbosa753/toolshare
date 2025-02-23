@@ -33,9 +33,11 @@
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.8.2",
+    "@adonisjs/core": "^6.17.2",
     "@adonisjs/eslint-config": "^2.0.0",
     "@adonisjs/prettier-config": "^1.4.0",
     "@adonisjs/tsconfig": "^1.4.0",
+    "@adonisjs/validator": "^13.0.2",
     "@japa/api-client": "^3.0.3",
     "@japa/assert": "^4.0.1",
     "@japa/plugin-adonisjs": "^4.0.0",
@@ -52,13 +54,15 @@
   },
   "dependencies": {
     "@adonisjs/auth": "^9.3.1",
-    "@adonisjs/core": "^6.17.2",
     "@adonisjs/cors": "^2.2.1",
     "@adonisjs/lucid": "^21.6.0",
+    "@adonisjs/websocket": "^1.0.12",
     "@vinejs/vine": "^3.0.0",
     "luxon": "^3.5.0",
     "pg": "^8.13.3",
-    "reflect-metadata": "^0.2.2"
+    "reflect-metadata": "^0.2.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   },
   "hotHook": {
     "boundaries": [

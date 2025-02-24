@@ -24,6 +24,9 @@ router
 
     // Rotas para o chat
     router.post('/chats', [ChatController, 'store'])
-    router.get('/tools/:id/chats', [ChatController, 'show'])
+    router.get('/tools/:id/chats', [ChatController, 'index'])
+    router.get('/chats/:id', [ChatController, 'show'])
+    router.delete('/chats/:id', [ChatController, 'destroy'])
+
   })
   .use(middleware.auth()) // Aplica o middleware de autenticação a todas as rotas do grupo

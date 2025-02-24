@@ -4,7 +4,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Fran Silva",
+  "name": "João Silva",
   "email": "fran@gmail.com",
   "password": "123456",
   "phone": "11999999999",
@@ -16,7 +16,7 @@ Accept: application/json
   "image": "url_da_imagem"
 }
 
-# Criar uma sessão (Login)
+###
 POST http://localhost:3333/session
 Content-Type: application/json
 Accept: application/json
@@ -26,15 +26,16 @@ Accept: application/json
   "password": "123456"
 }
 
-# Listar todos os usuários
+
+### Listar todos os usuários
 GET http://localhost:3333/user
 Accept: application/json
 
-# Buscar um usuário específico
+### Buscar um usuário específico
 GET http://localhost:3333/user/1
 Accept: application/json
 
-# Atualizar um usuário
+### Atualizar um usuário
 PUT http://localhost:3333/user/1
 Content-Type: application/json
 Accept: application/json
@@ -49,14 +50,14 @@ Accept: application/json
   "image": "nova_url_da_imagem"
 }
 
-# Excluir um usuário
+### Excluir um usuário
 DELETE http://localhost:3333/user/1
 Accept: application/json
 
-# Criar uma nova ferramenta
+### Criar uma nova ferramenta
 POST http://localhost:3333/tool
 Content-Type: application/json
-Authorization: Bearer <token>
+Authorization: Bearer oat_MQ.bHVmLVg1RmlYWHAzVFd1OVZHckc0MjhHREVveVc0UTU0amMtdkw1UTI1Mjg1NDM2NTg
 
 {
   "name": "Furadeira",
@@ -69,21 +70,21 @@ Authorization: Bearer <token>
   "userId": 2
 }
 
-# Listar todas as ferramentas
+### Listar todas as ferramentas
 GET http://localhost:3333/tool
 Accept: application/json
-Authorization: Bearer <token>
+Authorization: Bearer oat_MQ.bHVmLVg1RmlYWHAzVFd1OVZHckc0MjhHREVveVc0UTU0amMtdkw1UTI1Mjg1NDM2NTg
 
-# Buscar uma ferramenta específica
+### Buscar uma ferramenta específica
 GET http://localhost:3333/tool/2
 Accept: application/json
-Authorization: Bearer <token>
+Authorization: Bearer oat_Mw.Y0FrSzN1M2RmbG5jVzJ5MHhVQ0Z6amJ2eU9TcDdqTjV3RVdmdWhBbTM0NzU5NzU1MTY
 
-# Atualizar uma ferramenta
+### Atualizar uma ferramenta
 PUT http://localhost:3333/tool/1
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer <token>
+Authorization: Bearer <seu_token_jwt>
 
 {
   "name": "Furadeira Atualizada",
@@ -94,16 +95,16 @@ Authorization: Bearer <token>
   "image": "nova_url_da_imagem"
 }
 
-# Excluir uma ferramenta
+### Excluir uma ferramenta
 DELETE http://localhost:3333/tool/1
 Accept: application/json
-Authorization: Bearer <token>
+Authorization: Bearer <seu_token_jwt>
 
-# Criar uma nova reserva
+### Criar uma nova reserva
 POST http://localhost:3333/reservation
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer <token>
+Authorization: Bearer oat_Mg.SDVQX29JXzRkaGd3TVdBZHFBVXByZDdvLVdUdFB6QVJzZHRLbG4xNzEzODM3ODQxMTc
 
 {
   "start_date": "2023-10-10",
@@ -112,43 +113,54 @@ Authorization: Bearer <token>
   "status": "pendente"
 }
 
-# Listar todas as reservas
+### Listar todas as reservas
 GET http://localhost:3333/reservation
 Accept: application/json
-Authorization: Bearer <token>
+Authorization: Bearer oat_Mg.SDVQX29JXzRkaGd3TVdBZHFBVXByZDdvLVdUdFB6QVJzZHRLbG4xNzEzODM3ODQxMTc
 
-# Buscar uma reserva específica
+### Buscar uma reserva específica
 GET http://localhost:3333/reservation/1
 Accept: application/json
-Authorization: Bearer <token>
+Authorization: Bearer oat_Mg.SDVQX29JXzRkaGd3TVdBZHFBVXByZDdvLVdUdFB6QVJzZHRLbG4xNzEzODM3ODQxMTc
 
-# Atualizar o status de uma reserva
+### Atualizar o status de uma reserva
 PUT http://localhost:3333/reservation/1
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer <token>
+Authorization: Bearer oat_Mg.SDVQX29JXzRkaGd3TVdBZHFBVXByZDdvLVdUdFB6QVJzZHRLbG4xNzEzODM3ODQxMTc
 
 {
   "status": "confirmada"
 }
 
-# Excluir uma reserva
+### Excluir uma reserva
 DELETE http://localhost:3333/reservation/1
 Accept: application/json
-Authorization: Bearer <token>
+Authorization: Bearer oat_Mg.SDVQX29JXzRkaGd3TVdBZHFBVXByZDdvLVdUdFB6QVJzZHRLbG4xNzEzODM3ODQxMTc
 
-# Criar um chat
+###Criar um chat
 POST http://localhost:3333/chats
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer <token>
+Authorization: Bearer oat_MQ.bHVmLVg1RmlYWHAzVFd1OVZHckc0MjhHREVveVc0UTU0amMtdkw1UTI1Mjg1NDM2NTg
 
 {
-  "message": "Olá, estou interessado na sua ferramenta!",
+  "message": "Olá,",
   "toolId": 1
 }
 
-# Listar chats de uma ferramenta específica
+### Listar chats de uma ferramenta específica
 GET http://localhost:3333/tools/1/chats
 Accept: application/json
-Authorization: Bearer <token>
+Authorization: Bearer oat_MQ.bHVmLVg1RmlYWHAzVFd1OVZHckc0MjhHREVveVc0UTU0amMtdkw1UTI1Mjg1NDM2NTg
+
+###
+GET http://localhost:3333/chats/1
+Accept: application/json
+Authorization: Bearer oat_NA.eXdjMEZhejZ2UktmRW1IY2RmWm0tR2xEdHpoNDRkM2w3eUItSnBpbjIxNzgxMTUyMzY
+
+###
+DELETE http://localhost:3333/chats/1
+Accept: application/json
+Authorization: Bearer oat_NA.eXdjMEZhejZ2UktmRW1IY2RmWm0tR2xEdHpoNDRkM2w3eUItSnBpbjIxNzgxMTUyMzY
+

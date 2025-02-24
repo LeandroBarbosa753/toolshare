@@ -5,7 +5,17 @@ meta {
 }
 
 put {
-  url: http://localhost:3333/reservation
-  body: none
-  auth: none
+  url: http://localhost:3333/reservation/1
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: oat_NjU.MWRGTzZ4cUljRW1ZOHZQQnZrSXlyM1BWV1RWRkZsRmJYTE5uaE4waDEwMTcyMTU2NzM
+}
+
+body:json {
+  {
+    "status": "confirmada"
+  }
 }

@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import Reservation from '#models/reservation'
 import Tool from '#models/tool'
 import { createReservationValidator, updateReservationValidator } from '#validators/reservation'
+import Notification from '#models/notification'
 
 export default class ReservationsController {
   public async index({ auth, response }: HttpContext) {
@@ -42,23 +43,39 @@ export default class ReservationsController {
     if (!user) {
       return response.unauthorized({ message: 'Você precisa estar autenticado' });
     }
-  
+
     try {
+     
       const reservation = await Reservation.query()
         .where('id', params.id)
         .preload('tool')
+        .preload('user') 
         .firstOrFail();
-  
+
+     
       if (reservation.tool.userId !== user.id) {
         return response.unauthorized({ message: 'Você não tem permissão para atualizar o status desta reserva' });
       }
 
+     
       const { status } = await request.validateUsing(updateReservationValidator);
-  
+
+     
       reservation.status = status;
       await reservation.save();
-  
-      return response.json(reservation);
+
+      
+      await Notification.create({
+        userId: reservation.userId, 
+        reservationId: reservation.id, 
+        message: `O status da sua reserva para a ferramenta "${reservation.tool.name}" foi alterado para "${status}".`,
+      });
+
+      
+      return response.json({
+        message: 'Status da reserva atualizado com sucesso',
+        reservation,
+      });
     } catch (error) {
       console.error('Erro ao atualizar o status da reserva:', error);
       return response.status(404).json({ message: 'Reserva não encontrada' });
@@ -88,16 +105,23 @@ export default class ReservationsController {
         return response.badRequest({ message: 'Preço da ferramenta não encontrado' });
       }
   
-      const hours = end_date.diff(start_date, 'hours').hours; // Calcula a diferença em horas
+      const hours = end_date.diff(start_date, 'hours').hours; 
       const computedPrice = hours * tool.price;
   
       const reservation = await Reservation.create({
         userId: user.id,
         toolId: tool_id,
-        start_date: start_date, // Mantém como DateTime
-        end_date: end_date,     // Mantém como DateTime
+        start_date: start_date, 
+        end_date: end_date,     
         total_price: computedPrice,
         status: status || 'pendente',
+      });
+  
+      
+      await Notification.create({
+        userId: tool.userId,
+        reservationId: reservation.id,
+        message: `Nova solicitação de aluguel para a ferramenta ${tool.name}`,
       });
   
       return response.created(reservation);

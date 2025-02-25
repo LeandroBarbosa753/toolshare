@@ -1,6 +1,7 @@
 import router from '@adonisjs/core/services/router'
 //import io from './socket'
 import { middleware } from './kernel.js'
+import NotificationsController from '#controllers/notifications_controller'
 
 // Importe os controllers
 const UsersController = () => import('#controllers/users_controller')
@@ -21,10 +22,14 @@ router
     // Rotas para ferramentas e reservas
     router.resource('tool', ToolsController).apiOnly()
     router.resource('reservation', ReservationsController).apiOnly()
-    router.get('/reservation/received', [ReservationsController, 'received'])
-    router.put('/reservation/:id/status', [ReservationsController, 'updateStatus'])
+    router.get('/reservations/received', [ReservationsController, 'received'])
+    router.put('/reservations/:id/status', [ReservationsController, 'updateStatus'])
     // Rotas para o chat
     router.post('/chats', [ChatController, 'store'])
     router.get('/tools/:id/chats', [ChatController, 'show'])
+    router.get('/notifications', [NotificationsController, 'index'])
+    router.put('/notifications/:id/mark-as-read', [NotificationsController, 'markAsRead'])
+    router.delete('/notifications/:id', [NotificationsController, 'delete'])
+
   })
   .use(middleware.auth()) // Aplica o middleware de autenticação a todas as rotas do grupo

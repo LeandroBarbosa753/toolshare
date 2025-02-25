@@ -21,8 +21,8 @@ router
     // Rotas para ferramentas e reservas
     router.resource('tool', ToolsController).apiOnly()
     router.resource('reservation', ReservationsController).apiOnly()
-    router.get('/reservations/received', [ReservationsController, 'received'])
-    router.put('/reservations/:id/status', [ReservationsController, 'updateStatus'])
+    router.get('/reservation/received', [ReservationsController, 'received'])
+    router.put('/reservation/:id/status', [ReservationsController, 'updateStatus'])
     // Rotas para o chat
     router.post('/chats', [ChatController, 'store'])
     router.get('/tools/:id/chats', [ChatController, 'show'])

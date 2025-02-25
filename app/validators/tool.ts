@@ -3,7 +3,7 @@ import vine from '@vinejs/vine'
 export const createToolValidator = vine.compile(
   vine.object({
     name: vine.string().trim().minLength(3),
-    description: vine.string().trim().minLength(10).optional(),
+    description: vine.string().trim().optional(),
     price: vine.number().min(0),
     category: vine.string().trim().minLength(3),
     rating: vine.number().min(0).max(5),

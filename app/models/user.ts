@@ -43,9 +43,6 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare address: string
 
   @column()
-  declare type: 'locador' | 'locatário'
-
-  @column()
   declare image: string | null
 
   @column()

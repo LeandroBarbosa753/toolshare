@@ -9,7 +9,7 @@ export default class UsersController {
   }
 
   async store({ request, response }: HttpContext) {
-    const { name, email, password, phone, cpf, type, address, latitude, longitude, image } =
+    const { name, email, password, phone, cpf,  address, latitude, longitude, image } =
       await request.validateUsing(createUserValidator)
     try {
       const user = await User.create({
@@ -18,7 +18,6 @@ export default class UsersController {
         password,
         phone,
         cpf,
-        type,
         address,
         latitude,
         longitude,

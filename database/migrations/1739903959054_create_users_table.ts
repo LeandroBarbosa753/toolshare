@@ -16,10 +16,7 @@ export default class extends BaseSchema {
       table.string('longitude').nullable()
       table.string('address').nullable()
       table.string('image').nullable()
-
-      table.enum('type', ['locador', 'locatário']).defaultTo('locatário')
       table.string('token').nullable()
-
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
     })

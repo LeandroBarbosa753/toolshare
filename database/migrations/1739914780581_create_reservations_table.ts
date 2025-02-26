@@ -25,7 +25,7 @@ export default class extends BaseSchema {
       table.datetime('start_date').notNullable()
       table.datetime('end_date').notNullable()
       table.float('total_price').notNullable()
-      table.enum('status', ['pendente', 'confirmada', 'cancelada']).defaultTo('pendente')
+      table.enum('status', ['pendente', 'confirmada', 'cancelada', 'finalizada']).defaultTo('pendente')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

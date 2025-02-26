@@ -25,6 +25,6 @@ export const updateReservationValidator = vine.compile(
     start_date: customDate.optional(),
     end_date: customDate.optional(),
     total_price: vine.number().min(0).optional(),
-    status: vine.enum(['pendente', 'confirmada', 'cancelada']).optional(),
+    status: vine.enum(['pendente', 'confirmada', 'cancelada', 'finalizada']).optional(),
   })
 );

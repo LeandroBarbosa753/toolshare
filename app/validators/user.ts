@@ -5,7 +5,6 @@ export const createUserValidator = vine.compile(
     name: vine.string().trim().minLength(4).maxLength(256),
     cpf: vine.string().trim().minLength(9).maxLength(15),
     phone: vine.string().trim().minLength(10).maxLength(15),
-
     email: vine
       .string()
       .email()
@@ -16,7 +15,6 @@ export const createUserValidator = vine.compile(
       }),
     password: vine.string().minLength(6),
     address: vine.string().trim().minLength(4).maxLength(256),
-    type: vine.enum(['locador', 'locatário']),
     latitude: vine.string().optional(),
     longitude: vine.string().optional(),
     image: vine.string().optional(),

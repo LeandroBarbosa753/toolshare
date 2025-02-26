@@ -60,14 +60,23 @@ export default class ToolsController {
 
   async update({ params, request, response }: HttpContext) {
     try {
-      const tool = await Tool.findOrFail(params.id)
+      const tool = await Tool.findOrFail(params.id);
+
       const { name, description, price, category, rating, status, image } =
-        await request.validateUsing(updateToolValidator)
-      tool.merge({ name, description, price, category, rating, status, image })
-      await tool.save()
-      return response.status(200).json({ message: 'Tool updated successfully', tool })
+        await request.validateUsing(updateToolValidator);
+  
+  
+      tool.merge({ name, description, price, category, rating, status, image });
+  
+      if (rating !== undefined) {
+        tool.rating = rating;
+      }
+  
+      await tool.save();
+  
+      return response.status(200).json({ message: 'Tool updated successfully', tool });
     } catch (error) {
-      return response.status(404).json({ message: 'Tool not found' })
+      return response.status(404).json({ message: 'Tool not found' });
     }
   }
 

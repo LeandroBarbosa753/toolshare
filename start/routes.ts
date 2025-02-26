@@ -30,5 +30,6 @@ router
     router.get('/notifications', [NotificationsController, 'index'])
     router.put('/notifications/:id/mark-as-read', [NotificationsController, 'markAsRead'])
     router.delete('/notifications/:id', [NotificationsController, 'delete'])
+    router.put('/tools/:id', [ToolsController, 'update'])
   })
   .use(middleware.auth()) // Aplica o middleware de autenticação a todas as rotas do grupo

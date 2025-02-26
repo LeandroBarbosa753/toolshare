@@ -69,7 +69,7 @@ export default class ToolsController {
       tool.merge({ name, description, price, category, rating, status, image });
   
       if (rating !== undefined) {
-        tool.rating = rating;
+        tool.rating = (tool.rating + rating)/2;
       }
   
       await tool.save();

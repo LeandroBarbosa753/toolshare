@@ -42,9 +42,16 @@ export default class Tool extends BaseModel {
   @hasMany(() => Chat)
   declare chats: HasMany<typeof Chat>
 
+  @column()
+  declare latitude: string | null
+
+  @column()
+  declare longitude: string | null
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
 }

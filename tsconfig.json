@@ -3,9 +3,18 @@
   "compilerOptions": {
     "rootDir": "./",
     "outDir": "./build",
+    "baseUrl": ".",
     "paths": {
       "#controllers/*": ["app/Controllers/*"],
-      "@ioc:/*": ["node_modules/@adonisjs/*/src"]  // Adiciona este caminho
-    }
+      "@ioc:/*": ["node_modules/@adonisjs/*/src"]
+    },
+    "moduleResolution": "node16",
+    "module": "Node16",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "strict": true,
+    "target": "ES6"
   }
 }
